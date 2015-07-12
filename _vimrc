@@ -98,3 +98,6 @@ endfunction
 call s:InitNeoBundle()
 
 colorscheme jellybeans
+
+autocmd FileType javascript setlocal includeexpr=substitute(v:fname,'$','.js','') | setlocal path+=;/
+

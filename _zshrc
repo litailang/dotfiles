@@ -1,0 +1,119 @@
+autoload -U compinit
+compinit
+autoload -U colors
+colors
+bindkey -v
+HISTFILE=~/.zhistory
+SAVEHIST=1000
+HISTSIZE=2000
+DIRSTACKSIZE=20
+alias java='java -Dfile.encoding=UTF-8'
+setopt histnostore hist_ignore_dups hist_reduce_blanks autolist
+
+# コマンド履歴検索(Ctrl-P/Ctrl-N)
+autoload history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey "^P" history-beginning-search-backward-end
+bindkey "^N" history-beginning-search-forward-end
+
+# 移動したディレクトリを記録しておく。"cd -[Tab]"で移動履歴を一覧
+setopt auto_pushd
+
+# ディレクトリ名を入力するだけで移動
+setopt auto_cd
+
+# コマンド訂正
+setopt correct
+
+# 補完候補を詰めて表示する
+setopt list_packed 
+
+# 補完候補表示時などにピッピとビープ音をならないように設定
+setopt nolistbeep
+
+#Prompt(Ctrl-v ESCでエスケープ入力)
+case ${UID} in
+0)
+    PROMPT="%{[31m%}%n%%%{[m%} "
+    RPROMPT="[%~]"
+    PROMPT2="%B%{[31m%}%_#%{[m%}%b "
+    SPROMPT="%B%{[31m%}%r is correct? [n,y,a,e]:%{[m%}%b "
+    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
+        PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
+    ;;
+*)
+    PROMPT="%{[31m%}%n%%%{[m%} "
+    RPROMPT="[%~]"
+    PROMPT2="%{[31m%}%_%%%{[m%} "
+    SPROMPT="%{[31m%}%r is correct? [n,y,a,e]:%{[m%} "
+    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
+        PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
+    ;;
+esac
+
+## GNU grepがあったら優先して使う。
+#if type ggrep > /dev/null 2>&1; then
+#  alias grep=ggrep
+#fi
+## デフォルトオプションの設定
+export GREP_OPTIONS
+### バイナリファイルにはマッチさせない。
+GREP_OPTIONS="--binary-files=without-match"
+### grep対象としてディレクトリを指定したらディレクトリ内を再帰的にgrepする。
+#GREP_OPTIONS="--directories=recurse $GREP_OPTIONS"
+### 拡張子が.tmpのファイルは無視する。
+GREP_OPTIONS="--exclude=\*.tmp $GREP_OPTIONS"
+## 管理用ディレクトリを無視する。
+#if grep --help | grep -q -- --exclude-dir; then
+#  GREP_OPTIONS="--exclude-dir=.svn $GREP_OPTIONS"
+#  GREP_OPTIONS="--exclude-dir=.git $GREP_OPTIONS"
+#  GREP_OPTIONS="--exclude-dir=.deps $GREP_OPTIONS"
+#  GREP_OPTIONS="--exclude-dir=.libs $GREP_OPTIONS"
+#fi
+### 可能なら色を付ける。
+#if grep --help | grep -q -- --color; then
+#  GREP_OPTIONS="--color=auto $GREP_OPTIONS"
+#fi
+
+## vimを使う。
+export EDITOR=vim
+## vimがなくてもvimでviを起動する。
+if ! type vim > /dev/null 2>&1; then
+  alias vim=vi
+fi
+## ヒストリファイルにコマンドラインだけではなく実行時刻と実行時間も保存する。
+setopt extended_history
+## 同じコマンドラインを連続で実行した場合はヒストリに登録しない。
+setopt hist_ignore_dups
+## スペースで始まるコマンドラインはヒストリに追加しない。
+setopt hist_ignore_space
+## すぐにヒストリファイルに追記する。
+setopt inc_append_history
+## zshプロセス間でヒストリを共有する。
+setopt share_history
+## C-sでのヒストリ検索が潰されてしまうため、出力停止・開始用にC-s/C-qを使わない。
+setopt no_flow_control
+## 実行したプロセスの消費時間が3秒以上かかったら
+## 自動的に消費時間の統計情報を表示する。
+REPORTTIME=3
+
+## 全てのユーザのログイン・ログアウトを監視する。
+watch="all"
+## ログイン時にはすぐに表示する。
+log
+
+##
+function history-all { history -E 1 }
+
+## ^Dでログアウトしないようにする。
+setopt ignore_eof
+
+export PATH=/opt/local/bin:$PATH
+export PATH=~/apps/apache-ant-1.9.2/bin:$PATH
+export VAGRANT_HOME=~/vagrant/.vagrant.d/
+export JAVA_HOME=`/usr/libexec/java_home`
+
+export AWS_ACCESS_KEY_ID=xxxx
+export AWS_SECRET_KEY=xxxx
+
