@@ -68,6 +68,8 @@ function! s:LoadBundles()
   NeoBundle 'ujihisa/unite-colorscheme'
   NeoBundle 'tomasr/molokai'
   NeoBundle 'scrooloose/syntastic'
+  NeoBundle 'derekwyatt/vim-scala'
+  NeoBundle 'scrooloose/nerdtree'
   " ...
   " 読み込んだプラグインの設定
   " ...
@@ -79,11 +81,15 @@ function! s:InitNeoBundle()
   if isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
     filetype plugin indent off
     if has('vim_starting')
+      if &compatible
+        set nocompatible               " Be iMproved
+      endif
       set runtimepath+=~/.vim/bundle/neobundle.vim/
     endif
     try
-      call neobundle#rc(expand('~/.vim/bundle/'))
+      call neobundle#begin(expand('~/.vim/bundle/'))
       call s:LoadBundles()
+      call neobundle#end()
     catch
       call s:WithoutBundles()
     endtry 
@@ -92,6 +98,7 @@ function! s:InitNeoBundle()
   endif
 
   filetype indent plugin on
+  NeoBundleCheck
   syntax on
 endfunction
 
