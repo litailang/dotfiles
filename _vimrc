@@ -32,7 +32,7 @@ set wildmenu
 set wrap
 set textwidth=0
 set encoding=utf-8
-set fileencodings=iso-2022-jp,sjis,utf-8,euc-jp
+set fileencodings=utf-8,iso-2022-jp,sjis,euc-jp
 set hidden
 
 highlight ZenkakuSpace cterm=underline ctermfg=lightblue guibg=darkgray
